@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaRegTrashAlt, FaCheckCircle, FaCircle } from "react-icons/fa";
+import { FaRegEdit, FaRegTrashAlt, FaCheckCircle, FaCircle } from "react-icons/fa";
 
 
 const ContentStyle = styled.div`
@@ -40,17 +40,22 @@ const ContentStyle = styled.div`
     }
   }
 
-  button:first-child {
+  .button-check {
     position: absolute;
     top: 17px;
     left: 15px;
     padding: 0;
     font-size: 18px;
-    background: transparent;
+    /* background: transparent; */
+    border-radius: 50%;
     border: none;
-    color: rgba(0, 0, 0, 0.3);
+    color: #ffb58e;
     cursor: pointer;
     transition: all 200ms ease-in;
+
+    &:hover {
+      color: #ff7d36;
+    }
 
     &.checked {
       color: #fff;
@@ -58,17 +63,45 @@ const ContentStyle = styled.div`
     }
   }
 
-  button:last-child {
+  .button-edit {
+    position: absolute;
+    top: 16px;
+    right: 45px;
+    padding: 0;
+    font-size: 20px;
+    background: transparent;
+    border-radius: 50%;
+    border: none;
+    /* color: rgba(0, 0, 0, 0.2); */
+    cursor: pointer;
+    transition: all 200ms ease-in;
+
+    &:hover {
+      color: #ff7d36;
+    }
+
+    &.checked {
+      color: #fff;
+      background: #ff7d36;
+    }
+  }
+
+  .button-trash {
     position: absolute;
     top: 16px;
     right: 15px;
     padding: 0;
     font-size: 18px;
     background: transparent;
+    border-radius: 50%;
     border: none;
     /* color: rgba(0, 0, 0, 0.2); */
     cursor: pointer;
     transition: all 200ms ease-in;
+
+    &:hover {
+      color: #ff7d36;
+    }
 
     &.checked {
       color: #fff;
@@ -99,6 +132,11 @@ const Contents = ({ toDos, setToDos, handleDelete }) => {
     
   }
 
+  // 수정기능 추가
+  const editToDo = (text) => {
+    console.log(text)
+  }
+
   return (
     <main className="todo-contents">
       <ContentStyle className="output-container">
@@ -106,21 +144,27 @@ const Contents = ({ toDos, setToDos, handleDelete }) => {
           {toDos.map((todo) =>
             !todo.checked ? (
               <li key={todo.id}>
-                <button key={todo.id} onClick={() => toggleCheck(todo.id)}>
-                  <FaCircle size={18} />
+                <button className="button-check" type="button" key={todo.id} onClick={() => toggleCheck(todo.id)}>
+                  <FaCircle />
                 </button>
                 {todo.text}
-                <button onClick={() => handleDelete(todo.id)}>
-                  <FaRegTrashAlt size={18} />
+                <button className="button-edit" type="button" onClick={() => editToDo(todo.text)} >
+                  <FaRegEdit />
+                </button>
+                <button className="button-trash" type="button" onClick={() => handleDelete(todo.id)}>
+                  <FaRegTrashAlt />
                 </button>
               </li>
             ) : (
               <li key={todo.id} className='checked'>
-                <button className="checked" key={todo.id} onClick={() => toggleCheck(todo.id)}>
+                <button className="button-check checked" type="button" key={todo.id} onClick={() => toggleCheck(todo.id)}>
                   <FaCheckCircle />
                 </button>
                 <div>{todo.text}</div>
-                <button className="checked" onClick={() => handleDelete(todo.id)}>
+                <button className="button-edit checked" type="button" onClick={() => editToDo(todo.text)} >
+                  <FaRegEdit />
+                </button>
+                <button className="button-trash checked" type="button" onClick={() => handleDelete(todo.id)}>
                   <FaRegTrashAlt />
                 </button>
               </li>
