@@ -8,6 +8,8 @@ import Nav from './components/Nav';
 
 function App() {
   const [text, setText] = useState("");
+  // input창 수정가능한 상태 관리
+  const [isEdit, setIsEdit] = useState(false);
 
   // 투두 리스트 목록 상태 관리
   const [toDos, setToDos] = useState(data.todos);
@@ -47,7 +49,13 @@ function App() {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
-      <Contents toDos={toDos} setToDos={setToDos} handleDelete={handleDelete} />
+      <Contents
+        toDos={toDos}
+        setToDos={setToDos}
+        handleDelete={handleDelete}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+      />
     </div>
   );
 }
