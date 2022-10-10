@@ -5,7 +5,6 @@ import {
   FaRegTrashAlt,
   FaCheckCircle,
   FaCircle,
-  FaRestroom,
 } from "react-icons/fa";
 import EditInput from "./EditInput";
 
@@ -87,8 +86,9 @@ const ContentStyle = styled.div`
     }
 
     &.checked {
-      color: #fff;
+      color: transparent;
       background: #ff7d36;
+      cursor: default;
     }
   }
 
@@ -118,7 +118,7 @@ const ContentStyle = styled.div`
   .li-input {
     border: none;
     background-color: #fdf8f5;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 500;
 
     &:focus,
@@ -128,20 +128,21 @@ const ContentStyle = styled.div`
   }
 `;
 
-const Contents = ({ toDos, setToDos, handleDelete, isEdit, setIsEdit }) => {
+const Contents = ({ toDos, setToDos, handleDelete }) => {
   // const [check, setCheck] = useState(false); // 이걸 상태로는 관리할 수 없을까?
 
   // li의 input 상태 관리
   const [liText, setLiText] = useState("");
+  const [isEditable, setIsEditable] = useState(false);
 
   const toggleCheck = (id) => {
     // id를 인자로 전달받아
-    setToDos((todo) => {
-      return toDos.map((todo) =>
+    return setToDos(
+      toDos.map((todo) =>
         todo.id === id ? { ...todo, checked: !todo.checked } : todo
-      );
-    });
-
+      )
+    );
+    // console.log(toDos)
     // check 상태 관리로 적용하려다 안된 부분들
     // const toggled = toDos.map((todo) => {
     //   return todo.id === id ? { ...todo, checked: setCheck(!todo.checked) } : todo
@@ -151,27 +152,27 @@ const Contents = ({ toDos, setToDos, handleDelete, isEdit, setIsEdit }) => {
   };
 
   // 수정기능 추가
-  const editToDo = (id) => {
-    console.log(id)
+  const toggleEdit = (id) => {
+    // console.log(id)
     // console.log(text)
     // li input text를 변경 가능한 상태로 바꾸고
-    setIsEdit(!isEdit);
-    console.log(toDos);
+    // setIsEdit(!isEdit);
 
-    // toDos.map((todo) => 
+    // toDos.map((todo) =>
     //   return todo.id === id ? { ...todo, text: setLiText }
     // )
 
-    // 안되네... ㅠ.ㅠ
-    setToDos((todo) => {
-      return toDos.map((todo) => {
+    // 해당li(todo)의 id가 같으면
+    // 그 li 상태만 수정 가능한 상태로 전환(isEdit) 
+    setToDos(
+      toDos.map((todo) => {
         // console.log("todoid: ",todo.id)
-        // 해당li(todo)의 id가 같으면
-        // 그 li input text 상태만 toDos.text 상태로 바꿔
-        return  todo.id === id ? { ...todo, text: setLiText(todo.text) } : null
-      });
-    })
-    
+        // setLiText(todo.text)
+        // setIsEditable(!isEditable);
+        // console.log(liText)
+        return todo.id === id ? { ...todo, isEdit: !todo.isEdit } : todo;
+      })
+    );
   };
 
   return (
@@ -189,23 +190,27 @@ const Contents = ({ toDos, setToDos, handleDelete, isEdit, setIsEdit }) => {
                 >
                   <FaCircle />
                 </button>
-                {isEdit ? (
+                {todo.isEdit ? (
                   <EditInput
                     toDos={toDos}
                     setToDos={setToDos}
                     liText={liText}
                     setLiText={setLiText}
+                    todoId={todo.id}
+                    todoText={todo.text}
                   />
                 ) : (
                   todo.text
                 )}
-                <button
-                  className="button-edit"
-                  type="button"
-                  onClick={() => editToDo(todo.id)}
-                >
-                  <FaRegEdit />
-                </button>
+                {!todo.isEdit ? (
+                  <button
+                    className="button-edit"
+                    type="button"
+                    onClick={() => toggleEdit(todo.id)}
+                  >
+                    <FaRegEdit />
+                  </button>
+                ) : null}
                 <button
                   className="button-trash"
                   type="button"
@@ -228,7 +233,8 @@ const Contents = ({ toDos, setToDos, handleDelete, isEdit, setIsEdit }) => {
                 <button
                   className="button-edit checked"
                   type="button"
-                  onClick={() => editToDo(todo.text)}
+                  onClick={() => toggleEdit(todo.id)}
+                  disabled
                 >
                   <FaRegEdit />
                 </button>
