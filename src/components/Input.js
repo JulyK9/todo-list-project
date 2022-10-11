@@ -18,13 +18,13 @@ const InputStyle = styled.div`
 
   .todo-input input {
     width: 300px;
-    height: 45px;
+    height: 40px;
     /* border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.5); */
     border: 1px solid #ff7d36;
     border-radius: 5px;
     padding: 8px 15px;
-    font-size: 20px;
+    font-size: 18px;
 
     &:focus,
     :active {
@@ -112,6 +112,7 @@ const Input = ({ text, handleChange, handleSubmit }) => {
             ref={inputRef}
             onKeyPress={handleKeyPress}
             placeholder="당근 해야할 일을 적어보세요"
+            maxLength="15"
             required
             // onkeyDown 으로 진행시 중복 입력되는 오류 발생 : https://kwangsunny.tistory.com/33
           />

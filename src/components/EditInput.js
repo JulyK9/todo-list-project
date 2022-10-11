@@ -9,6 +9,7 @@ const EditingInputStyle = styled.div`
   input {
     color: green;
     font-weight: 500;
+    width: 220px;
   }
 
   button {
@@ -46,6 +47,11 @@ const EditInput = ({ toDos, setToDos, setLiText, liText, todoId, todoText }) => 
       onClickEnter(e);
     }
   };
+
+  // 포커스 아웃됐을때 제출이 적용되도록
+  const handleBlur = (e) => {
+    liText && handleLiEdit(e);
+  }
 
   const onClickEnter = (e) => {
     liText && handleLiEdit(e);
@@ -86,7 +92,9 @@ const EditInput = ({ toDos, setToDos, setLiText, liText, todoId, todoText }) => 
           ref={inputRef}
           onChange={handleLiChange}
           onKeyPress={handleKeyPress}
-          placeholder="할일을 작성하고 엔터!"
+          onBlur={handleBlur}
+          maxLength="15"
+          placeholder="할일 작성후 엔터!"
         />
         <button onClick={onClickEnter}>
           <FaRegEdit />
