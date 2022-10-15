@@ -7,6 +7,7 @@ import {
   FaCircle,
 } from "react-icons/fa";
 import EditInput from "./EditInput";
+import axios from "axios";
 
 const ContentStyle = styled.div`
   margin-top: 0.5rem;
@@ -128,65 +129,79 @@ const ContentStyle = styled.div`
   }
 `;
 
-const Contents = ({ toDos, setToDos, handleDelete }) => {
+const Contents = ({ toDos, setToDos, handleDelete, getToDos }) => {
   // const [check, setCheck] = useState(false); // 이걸 상태로는 관리할 수 없을까?
 
   // li의 input 상태 관리
   const [liText, setLiText] = useState("");
-  const [isEditable, setIsEditable] = useState(false);
 
-  const toggleCheck = (id) => {
-    // id를 인자로 전달받아
-    return setToDos(
-      toDos.map((todo) =>
-        todo.id === id ? { ...todo, checked: !todo.checked } : todo
-      )
-    );
-    // console.log(toDos)
-    // check 상태 관리로 적용하려다 안된 부분들
-    // const toggled = toDos.map((todo) => {
-    //   return todo.id === id ? { ...todo, checked: setCheck(!todo.checked) } : todo
-    // })
-    // // console.log(toggled)
-    // setToDos(toggled)
+  // const [isEdit, setIsEdit] = useState(false);
+
+  // console.log(toDos)
+
+  // 완료여부 토글
+  // const toggleCheck = (id) => {
+  //   // id를 인자로 전달받아
+  //   return setToDos(
+  //     toDos.map((todo) => {
+  //       return todo.id === id ? { ...todo, checked: !todo.checked } : todo;
+  //     })
+  //   );
+  //   // console.log(toDos)
+  //   // check 상태 관리로 적용하려다 안된 부분들
+  //   // const toggled = toDos.map((todo) => {
+  //   //   return todo.id === id ? { ...todo, checked: setCheck(!todo.checked) } : todo
+  //   // })
+  //   // // console.log(toggled)
+  //   // setToDos(toggled)
+  // };
+
+  const toggleCheck = async (id, checked) => {
+    await axios.patch(`http://localhost:3001/todos/${id}`, {
+      checked: !checked,
+    });
+    await getToDos();
   };
 
   // 수정기능 추가
-  const toggleEdit = (id) => {
-    // console.log(id)
+  // const toggleEdit = (id) => {
+  //   // console.log(id)
+  //   // console.log(text)
+  //   // li input text를 변경 가능한 상태로 바꾸고
+  //   // setIsEdit(!isEdit);
+
+  //   // 해당li(todo)의 id가 같으면
+  //   // 그 li 상태만 수정 가능한 상태로 전환(isEdit)
+  //   setToDos(
+  //     toDos.map((todo) => {
+  //       return todo.id === id ? { ...todo, isEdit: !todo.isEdit } : todo;
+  //     })
+  //   );
+  // };
+  const toggleEdit = async (id, isEdit, text) => {
     // console.log(text)
-    // li input text를 변경 가능한 상태로 바꾸고
-    // setIsEdit(!isEdit);
-
-    // toDos.map((todo) =>
-    //   return todo.id === id ? { ...todo, text: setLiText }
-    // )
-
-    // 해당li(todo)의 id가 같으면
-    // 그 li 상태만 수정 가능한 상태로 전환(isEdit) 
-    setToDos(
-      toDos.map((todo) => {
-        // console.log("todoid: ",todo.id)
-        // setLiText(todo.text)
-        // setIsEditable(!isEditable);
-        // console.log(liText)
-        return todo.id === id ? { ...todo, isEdit: !todo.isEdit } : todo;
-      })
-    );
+    await axios.patch(`http://localhost:3001/todos/${id}`, {
+      isEdit: !isEdit,
+      text: text,
+    });
+    await getToDos();
+    setLiText(liText)
+    await getToDos();
   };
 
   return (
     <main className="todo-contents">
       <ContentStyle className="output-container">
         <ul>
-          {toDos.map((todo) =>
+          {toDos && toDos.map((todo) =>
+            // console.log("toDos: ", toDos) // object
+            // console.log(Array.isArray(toDos)) // true
             !todo.checked ? (
               <li key={todo.id}>
                 <button
                   className="button-check"
                   type="button"
-                  key={todo.id}
-                  onClick={() => toggleCheck(todo.id)}
+                  onClick={() => toggleCheck(todo.id, todo.checked)}
                 >
                   <FaCircle />
                 </button>
@@ -198,6 +213,9 @@ const Contents = ({ toDos, setToDos, handleDelete }) => {
                     setLiText={setLiText}
                     todoId={todo.id}
                     todoText={todo.text}
+                    todoEdit={todo.isEdit}
+                    getToDos={getToDos}
+                    toggleEdit={toggleEdit}
                   />
                 ) : (
                   todo.text
@@ -206,7 +224,7 @@ const Contents = ({ toDos, setToDos, handleDelete }) => {
                   <button
                     className="button-edit"
                     type="button"
-                    onClick={() => toggleEdit(todo.id)}
+                    onClick={() => toggleEdit(todo.id, todo.isEdit, todo.text)}
                   >
                     <FaRegEdit />
                   </button>
@@ -224,8 +242,7 @@ const Contents = ({ toDos, setToDos, handleDelete }) => {
                 <button
                   className="button-check checked"
                   type="button"
-                  key={todo.id}
-                  onClick={() => toggleCheck(todo.id)}
+                  onClick={() => toggleCheck(todo.id, todo.checked)}
                 >
                   <FaCheckCircle />
                 </button>
@@ -233,7 +250,7 @@ const Contents = ({ toDos, setToDos, handleDelete }) => {
                 <button
                   className="button-edit checked"
                   type="button"
-                  onClick={() => toggleEdit(todo.id)}
+                  onClick={() => toggleEdit(todo.id, todo.isEdit, todo.text)}
                   disabled
                 >
                   <FaRegEdit />

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FaRegEdit } from "react-icons/fa";
+import axios from "axios";
 
 const EditingInputStyle = styled.div`
   position: relative;
@@ -26,7 +27,7 @@ const EditingInputStyle = styled.div`
   }
 `;
 
-const EditInput = ({ toDos, setToDos, setLiText, liText, todoId, todoText }) => {
+const EditInput = ({ toDos, setToDos, setLiText, liText, todoId, todoText, todoEdit, getToDos, toggleEdit }) => {
   // const [liText, setLiText] = useState("");
 
   const inputRef = useRef(null);
@@ -44,39 +45,40 @@ const EditInput = ({ toDos, setToDos, setLiText, liText, todoId, todoText }) => 
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
-      onClickEnter(e);
+      onClickEnter();
     }
   };
 
   // 포커스 아웃됐을때 제출이 적용되도록
-  const handleBlur = (e) => {
-    liText && handleLiEdit(e);
+  const handleBlur = () => {
+    liText && toggleEdit(todoId, todoEdit, liText);
   }
 
-  const onClickEnter = (e) => {
-    liText && handleLiEdit(e);
+  const onClickEnter = () => {
+    liText && toggleEdit(todoId, todoEdit, liText);
   };
 
-  const handleLiEdit = (e) => {
-    e.preventDefault();
-    // liText && editToDo(text)
-    // console.log("toDos: ", toDos)
-    // console.log("liText", liText)
+  // const handleLiEdit = (e) => {
+  //   e.preventDefault();
+  //   // liText && editToDo(text)
+  //   // console.log("toDos: ", toDos)
+  //   // console.log("liText", liText)
 
-    // li의 id랑 일치하는(todoId, props로 받아옴) todo의 id를 toDos에서 인덱스 찾기
-    const toDoIdx = toDos.findIndex((todo) => todo.id === todoId);
-    // console.log(todoId) // 2
-    // console.log(toDoIdx); // 1
+  //   // li의 id랑 일치하는(todoId, props로 받아옴) todo의 id를 toDos에서 인덱스 찾기
+  //   const toDoIdx = toDos.findIndex((todo) => todo.id === todoId);
+  //   // console.log(todoId) // 2
+  //   // console.log(toDoIdx); // 1
 
-    // toDos 를 원본 유지하면서 바꿔줌
-    const newToDos = [
-      ...toDos.slice(0, toDoIdx),
-      { id: todoId, text: liText, checked: false, isEdit: false },
-      ...toDos.slice(toDoIdx + 1),
-    ];
-    setToDos(newToDos);
-    setLiText("");
-  };
+  //   // toDos 를 원본 유지하면서 바꿔줌
+  //   const newToDos = [
+  //     ...toDos.slice(0, toDoIdx),
+  //     { id: todoId, text: liText, checked: false, isEdit: false },
+  //     ...toDos.slice(toDoIdx + 1),
+  //   ];
+  //   setToDos(newToDos);
+  //   setLiText("");
+  // };
+
 
   // const editToDo = (liText) => {
   //   setToDos([])

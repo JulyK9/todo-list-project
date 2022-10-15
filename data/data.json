@@ -1,17 +1,22 @@
 {
-  "todos": 
-  [
+  "todos": [
     {
-      "id": 1,
-      "text": "후론트로 취업하기",
+      "text": "열심히 리액트 공부하기dd",
       "checked": false,
-      "isEdit": false
+      "isEdit": false,
+      "id": 1
     },
     {
-      "id": 2,
-      "text": "5년안에 해외 취업하기",
+      "text": "테스트입니다",
       "checked": false,
-      "isEdit": false
+      "isEdit": false,
+      "id": 2
+    },
+    {
+      "text": "추가 작성해보기",
+      "checked": false,
+      "isEdit": false,
+      "id": 3
     }
   ]
 }
