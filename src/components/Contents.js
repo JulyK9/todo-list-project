@@ -135,6 +135,7 @@ const Contents = ({ toDos, setToDos, handleDelete, getToDos }) => {
   // li의 input 상태 관리
   const [liText, setLiText] = useState("");
 
+
   // const [isEdit, setIsEdit] = useState(false);
 
   // console.log(toDos)
@@ -185,7 +186,7 @@ const Contents = ({ toDos, setToDos, handleDelete, getToDos }) => {
       text: text,
     });
     await getToDos();
-    setLiText(liText)
+    setLiText(liText);
     await getToDos();
   };
 
@@ -193,78 +194,81 @@ const Contents = ({ toDos, setToDos, handleDelete, getToDos }) => {
     <main className="todo-contents">
       <ContentStyle className="output-container">
         <ul>
-          {toDos && toDos.map((todo) =>
-            // console.log("toDos: ", toDos) // object
-            // console.log(Array.isArray(toDos)) // true
-            !todo.checked ? (
-              <li key={todo.id}>
-                <button
-                  className="button-check"
-                  type="button"
-                  onClick={() => toggleCheck(todo.id, todo.checked)}
-                >
-                  <FaCircle />
-                </button>
-                {todo.isEdit ? (
-                  <EditInput
-                    toDos={toDos}
-                    setToDos={setToDos}
-                    liText={liText}
-                    setLiText={setLiText}
-                    todoId={todo.id}
-                    todoText={todo.text}
-                    todoEdit={todo.isEdit}
-                    getToDos={getToDos}
-                    toggleEdit={toggleEdit}
-                  />
-                ) : (
-                  todo.text
-                )}
-                {!todo.isEdit ? (
+          {toDos &&
+            toDos.map((todo) =>
+              // console.log("toDos: ", toDos) // object
+              // console.log(Array.isArray(toDos)) // true
+              !todo.checked ? (
+                <li key={todo.id}>
                   <button
-                    className="button-edit"
+                    className="button-check"
+                    type="button"
+                    onClick={() => toggleCheck(todo.id, todo.checked)}
+                  >
+                    <FaCircle />
+                  </button>
+                  {todo.isEdit ? (
+                    <EditInput
+                      toDos={toDos}
+                      setToDos={setToDos}
+                      liText={liText}
+                      setLiText={setLiText}
+                      todoId={todo.id}
+                      todoText={todo.text}
+                      todoEdit={todo.isEdit}
+                      getToDos={getToDos}
+                      toggleEdit={toggleEdit}
+                    />
+                  ) : (
+                    todo.text
+                  )}
+                  {!todo.isEdit ? (
+                    <button
+                      className="button-edit"
+                      type="button"
+                      onClick={() =>
+                        toggleEdit(todo.id, todo.isEdit, todo.text)
+                      }
+                    >
+                      <FaRegEdit />
+                    </button>
+                  ) : null}
+                  <button
+                    className="button-trash"
+                    type="button"
+                    onClick={() => handleDelete(todo.id)}
+                  >
+                    <FaRegTrashAlt />
+                  </button>
+                </li>
+              ) : (
+                <li key={todo.id} className="checked">
+                  <button
+                    className="button-check checked"
+                    type="button"
+                    onClick={() => toggleCheck(todo.id, todo.checked)}
+                  >
+                    <FaCheckCircle />
+                  </button>
+                  <div>{todo.text}</div>
+                  <button
+                    className="button-edit checked"
                     type="button"
                     onClick={() => toggleEdit(todo.id, todo.isEdit, todo.text)}
+                    disabled
                   >
                     <FaRegEdit />
                   </button>
-                ) : null}
-                <button
-                  className="button-trash"
-                  type="button"
-                  onClick={() => handleDelete(todo.id)}
-                >
-                  <FaRegTrashAlt />
-                </button>
-              </li>
-            ) : (
-              <li key={todo.id} className="checked">
-                <button
-                  className="button-check checked"
-                  type="button"
-                  onClick={() => toggleCheck(todo.id, todo.checked)}
-                >
-                  <FaCheckCircle />
-                </button>
-                <div>{todo.text}</div>
-                <button
-                  className="button-edit checked"
-                  type="button"
-                  onClick={() => toggleEdit(todo.id, todo.isEdit, todo.text)}
-                  disabled
-                >
-                  <FaRegEdit />
-                </button>
-                <button
-                  className="button-trash checked"
-                  type="button"
-                  onClick={() => handleDelete(todo.id)}
-                >
-                  <FaRegTrashAlt />
-                </button>
-              </li>
-            )
-          )}
+                  <button
+                    className="button-trash checked"
+                    type="button"
+                    onClick={() => handleDelete(todo.id)}
+                  >
+                    <FaRegTrashAlt />
+                  </button>
+                </li>
+              )
+            )}
         </ul>
       </ContentStyle>
     </main>

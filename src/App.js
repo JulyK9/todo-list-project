@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import './App.css';
 // import { data } from './assets/data';
 import Contents from './components/Contents';
@@ -12,7 +12,7 @@ function App() {
 
   // 투두 리스트 목록 상태 관리
   // const [toDos, setToDos] = useState(data.todos);
-  const [toDos, setToDos] = useState([]); 
+  const [toDos, setToDos] = useState([]);
 
   // 고유한 id의 생성문제는 일단 간략하게(실제로는 서버에서 id를 만들어준다고 함)
   // uuid를 연습으로 적용해보자(적용여부 현재:X)
@@ -31,28 +31,29 @@ function App() {
 
   // json-server로 data 요청해서 todos 받아오기: 방식2
   const getToDos = async () => {
-    const { data } = await axios.get("http://localhost:3001/todos")
+    const { data } = await axios.get("http://localhost:3001/todos");
+    // await axios.get("http://localhost:3001/todos")
     // console.log(Array.isArray(data))
     // console.log(data)
     setToDos(data);
-      // .then(() => {
-      //   setToDos(data);
-      // })
-      // .catch((error) => {
-      //   console.error("error", error);
-      // });
+    // .then((res) => {
+    //   setToDos(res.data);
+    // })
+    // .catch((error) => {
+    //   console.error("error", error);
+    // });
   };
 
+  useEffect(() => {
+    (async () => {
+      await getToDos();
+    })();
+  }, []);
+
   // useEffect(() => {
-  //   (async () => {
-  //     await getToDos();
-  //   })()
+  //   getToDos();
   // }, []);
 
-  useEffect(() => {
-    getToDos();
-  }, []);
-  
   // console.log(toDos)
 
   const handleChange = (e) => {
@@ -75,13 +76,15 @@ function App() {
         isEdit: false,
       })
       .then((res) => {
-        // console.log(res.data);
-        setToDos(res.data);
+        console.log("받아오는 객체 확인: ", res.data); // 문제점 확인 => 가져온 data가 객체 형태임
+        // console.log(toDos); 
+        // setToDos(res.data); // [에러의 원인] 잘못되었던 방법!!
+        setToDos([...toDos, res.data]); 
       })
       .catch((error) => {
         console.error("error", error);
       });
-  }
+  };
 
   // const addToDo = (text) => {
   //   setToDos([
@@ -97,10 +100,9 @@ function App() {
   // };
 
   const handleDelete = async (id) => {
-    await axios.delete(`http://localhost:3001/todos/${id}`)
-    await getToDos()
-  }
-
+    await axios.delete(`http://localhost:3001/todos/${id}`);
+    await getToDos();
+  };
 
   // console.log(text)
   // console.log(toDos)
@@ -113,13 +115,14 @@ function App() {
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />
-      {toDos &&
+      {toDos && (
         <Contents
           toDos={toDos}
           setToDos={setToDos}
           handleDelete={handleDelete}
           getToDos={getToDos}
-      />}
+        />
+      )}
     </div>
   );
 }

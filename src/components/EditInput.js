@@ -96,7 +96,7 @@ const EditInput = ({ toDos, setToDos, setLiText, liText, todoId, todoText, todoE
           onKeyPress={handleKeyPress}
           onBlur={handleBlur}
           maxLength="15"
-          placeholder="할일 작성후 엔터!"
+          placeholder="할일을 적어주세요"
         />
         <button onClick={onClickEnter}>
           <FaRegEdit />
