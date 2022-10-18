@@ -11,24 +11,6 @@
       "checked": false,
       "isEdit": false,
       "id": 2
-    },
-    {
-      "text": "알고리즘 공부",
-      "checked": false,
-      "isEdit": false,
-      "id": 3
-    },
-    {
-      "text": "자바스크립트 공부",
-      "checked": false,
-      "isEdit": false,
-      "id": 4
-    },
-    {
-      "text": "저녁먹고 운동하기",
-      "checked": false,
-      "isEdit": false,
-      "id": 5
     }
   ]
 }
