@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FaRegEdit } from "react-icons/fa";
-import axios from "axios";
 
 const EditingInputStyle = styled.div`
   position: relative;
@@ -95,7 +94,7 @@ const EditInput = ({ toDos, setToDos, setLiText, liText, todoId, todoText, todoE
           onChange={handleLiChange}
           onKeyPress={handleKeyPress}
           onBlur={handleBlur}
-          maxLength="15"
+          maxLength="18"
           placeholder="할일을 적어주세요"
         />
         <button onClick={onClickEnter}>

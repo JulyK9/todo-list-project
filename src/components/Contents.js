@@ -9,6 +9,19 @@ import {
 import EditInput from "./EditInput";
 import axios from "axios";
 
+const ContentBoxStyle = styled.main`
+  height: 100vh;
+
+  // 스크롤 설정해주고 없애기
+  overflow: scroll;
+  -ms-overflow-style: none; 
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0 !important;
+  }
+`;
+
 const ContentStyle = styled.div`
   margin-top: 0.5rem;
   display: flex;
@@ -191,7 +204,7 @@ const Contents = ({ toDos, setToDos, handleDelete, getToDos }) => {
   };
 
   return (
-    <main className="todo-contents">
+    <ContentBoxStyle className="todo-contents">
       <ContentStyle className="output-container">
         <ul>
           {toDos &&
@@ -271,7 +284,7 @@ const Contents = ({ toDos, setToDos, handleDelete, getToDos }) => {
             )}
         </ul>
       </ContentStyle>
-    </main>
+    </ContentBoxStyle>
   );
 };
 
