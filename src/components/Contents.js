@@ -1,7 +1,26 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { FaRegEdit, FaRegTrashAlt, FaCheckCircle, FaCircle } from "react-icons/fa";
+import {
+  FaRegEdit,
+  FaRegTrashAlt,
+  FaCheckCircle,
+  FaCircle,
+} from "react-icons/fa";
+import EditInput from "./EditInput";
+import axios from "axios";
 
+const ContentBoxStyle = styled.main`
+  height: 100vh;
+
+  // 스크롤 설정해주고 없애기
+  overflow: scroll;
+  -ms-overflow-style: none; 
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0 !important;
+  }
+`;
 
 const ContentStyle = styled.div`
   margin-top: 0.5rem;
@@ -81,8 +100,9 @@ const ContentStyle = styled.div`
     }
 
     &.checked {
-      color: #fff;
+      color: transparent;
       background: #ff7d36;
+      cursor: default;
     }
   }
 
@@ -108,71 +128,163 @@ const ContentStyle = styled.div`
       background: #ff7d36;
     }
   }
+
+  .li-input {
+    border: none;
+    background-color: #fdf8f5;
+    font-size: 16px;
+    font-weight: 500;
+
+    &:focus,
+    :active {
+      outline: none;
+    }
+  }
 `;
 
-const Contents = ({ toDos, setToDos, handleDelete }) => {
-
+const Contents = ({ toDos, setToDos, handleDelete, getToDos }) => {
   // const [check, setCheck] = useState(false); // 이걸 상태로는 관리할 수 없을까?
 
-  const toggleCheck = (id) => {
-    // id를 인자로 전달받아 
-    setToDos((todo) => {
-      return toDos.map((todo) =>
-        todo.id === id ? { ...todo, checked: !todo.checked } : todo
-        
-      );
-    })
+  // li의 input 상태 관리
+  const [liText, setLiText] = useState("");
 
-    // check 상태 관리로 적용하려다 안된 부분들
-    // const toggled = toDos.map((todo) => {
-    //   return todo.id === id ? { ...todo, checked: setCheck(!todo.checked) } : todo
-    // })
-    // // console.log(toggled)
-    // setToDos(toggled)
-    
-  }
+
+  // const [isEdit, setIsEdit] = useState(false);
+
+  // console.log(toDos)
+
+  // 완료여부 토글
+  // const toggleCheck = (id) => {
+  //   // id를 인자로 전달받아
+  //   return setToDos(
+  //     toDos.map((todo) => {
+  //       return todo.id === id ? { ...todo, checked: !todo.checked } : todo;
+  //     })
+  //   );
+  //   // console.log(toDos)
+  //   // check 상태 관리로 적용하려다 안된 부분들
+  //   // const toggled = toDos.map((todo) => {
+  //   //   return todo.id === id ? { ...todo, checked: setCheck(!todo.checked) } : todo
+  //   // })
+  //   // // console.log(toggled)
+  //   // setToDos(toggled)
+  // };
+
+  const toggleCheck = async (id, checked) => {
+    await axios.patch(`http://localhost:3001/todos/${id}`, {
+      checked: !checked,
+    });
+    await getToDos();
+  };
 
   // 수정기능 추가
-  const editToDo = (text) => {
-    console.log(text)
-  }
+  // const toggleEdit = (id) => {
+  //   // console.log(id)
+  //   // console.log(text)
+  //   // li input text를 변경 가능한 상태로 바꾸고
+  //   // setIsEdit(!isEdit);
+
+  //   // 해당li(todo)의 id가 같으면
+  //   // 그 li 상태만 수정 가능한 상태로 전환(isEdit)
+  //   setToDos(
+  //     toDos.map((todo) => {
+  //       return todo.id === id ? { ...todo, isEdit: !todo.isEdit } : todo;
+  //     })
+  //   );
+  // };
+  const toggleEdit = async (id, isEdit, text) => {
+    // console.log(text)
+    await axios.patch(`http://localhost:3001/todos/${id}`, {
+      isEdit: !isEdit,
+      text: text,
+    });
+    await getToDos();
+    setLiText(liText);
+    await getToDos();
+  };
 
   return (
-    <main className="todo-contents">
+    <ContentBoxStyle className="todo-contents">
       <ContentStyle className="output-container">
         <ul>
-          {toDos.map((todo) =>
-            !todo.checked ? (
-              <li key={todo.id}>
-                <button className="button-check" type="button" key={todo.id} onClick={() => toggleCheck(todo.id)}>
-                  <FaCircle />
-                </button>
-                {todo.text}
-                <button className="button-edit" type="button" onClick={() => editToDo(todo.text)} >
-                  <FaRegEdit />
-                </button>
-                <button className="button-trash" type="button" onClick={() => handleDelete(todo.id)}>
-                  <FaRegTrashAlt />
-                </button>
-              </li>
-            ) : (
-              <li key={todo.id} className='checked'>
-                <button className="button-check checked" type="button" key={todo.id} onClick={() => toggleCheck(todo.id)}>
-                  <FaCheckCircle />
-                </button>
-                <div>{todo.text}</div>
-                <button className="button-edit checked" type="button" onClick={() => editToDo(todo.text)} >
-                  <FaRegEdit />
-                </button>
-                <button className="button-trash checked" type="button" onClick={() => handleDelete(todo.id)}>
-                  <FaRegTrashAlt />
-                </button>
-              </li>
-            )
-          )}
+          {toDos &&
+            toDos.map((todo) =>
+              // console.log("toDos: ", toDos) // object
+              // console.log(Array.isArray(toDos)) // true
+              !todo.checked ? (
+                <li key={todo.id}>
+                  <button
+                    className="button-check"
+                    type="button"
+                    onClick={() => toggleCheck(todo.id, todo.checked)}
+                  >
+                    <FaCircle />
+                  </button>
+                  {todo.isEdit ? (
+                    <EditInput
+                      toDos={toDos}
+                      setToDos={setToDos}
+                      liText={liText}
+                      setLiText={setLiText}
+                      todoId={todo.id}
+                      todoText={todo.text}
+                      todoEdit={todo.isEdit}
+                      getToDos={getToDos}
+                      toggleEdit={toggleEdit}
+                    />
+                  ) : (
+                    todo.text
+                  )}
+                  {!todo.isEdit ? (
+                    <button
+                      className="button-edit"
+                      type="button"
+                      onClick={() =>
+                        toggleEdit(todo.id, todo.isEdit, todo.text)
+                      }
+                    >
+                      <FaRegEdit />
+                    </button>
+                  ) : null}
+                  <button
+                    className="button-trash"
+                    type="button"
+                    onClick={() => handleDelete(todo.id)}
+                  >
+                    <FaRegTrashAlt />
+                  </button>
+                </li>
+              ) : (
+                <li key={todo.id} className="checked">
+                  <button
+                    className="button-check checked"
+                    type="button"
+                    onClick={() => toggleCheck(todo.id, todo.checked)}
+                  >
+                    <FaCheckCircle />
+                  </button>
+                  <div>{todo.text}</div>
+                  <button
+                    className="button-edit checked"
+                    type="button"
+                    onClick={() => toggleEdit(todo.id, todo.isEdit, todo.text)}
+                    disabled
+                  >
+                    <FaRegEdit />
+                  </button>
+                  <button
+                    className="button-trash checked"
+                    type="button"
+                    onClick={() => handleDelete(todo.id)}
+                  >
+                    <FaRegTrashAlt />
+                  </button>
+                </li>
+              )
+            )}
         </ul>
       </ContentStyle>
-    </main>
+    </ContentBoxStyle>
   );
 };
 

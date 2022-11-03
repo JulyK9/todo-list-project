@@ -1,0 +1,16 @@
+{
+  "todos": [
+    {
+      "text": "후론트로 취업하기",
+      "checked": false,
+      "isEdit": false,
+      "id": 1
+    },
+    {
+      "text": "리액트 열심히 공부하기",
+      "checked": false,
+      "isEdit": false,
+      "id": 2
+    }
+  ]
+}
