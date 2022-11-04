@@ -43,5 +43,5 @@
     ]
   },
   "proxy": "http://localhost:3001/",
-  "homepage": "https://JulyK9.github.io/todo-list-project"
+  "homepage": "."
 }
