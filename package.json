@@ -17,7 +17,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "GENERATE_SOURCEMAP=false react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -43,5 +43,5 @@
     ]
   },
   "proxy": "http://localhost:3001/",
-  "homepage": "https://JulyK9.github.io/todo-list-project"
+  "homepage": "."
 }
